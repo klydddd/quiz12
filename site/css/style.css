@@ -1,0 +1,116 @@
+:root {
+  --bg: #f6f7fb;
+  --card: #ffffff;
+  --text: #1d2433;
+  --muted: #5b6475;
+  --accent: #2f6fed;
+  --border: #e2e5ee;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #11141b;
+    --card: #1a1f2a;
+    --text: #e8ebf2;
+    --muted: #a0a8b8;
+    --accent: #6c9bff;
+    --border: #2a3140;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+}
+
+header,
+main,
+footer {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+header {
+  padding-top: 48px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 2.5rem;
+}
+
+.subtitle {
+  margin-top: 4px;
+  color: var(--muted);
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin: 24px 0;
+}
+
+.card h2 {
+  margin-top: 0;
+  font-size: 1.25rem;
+}
+
+.pipeline li {
+  margin: 6px 0;
+}
+
+code {
+  background: var(--bg);
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+
+.counter {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.counter button {
+  width: 44px;
+  height: 44px;
+  font-size: 1.5rem;
+  border: none;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #fff;
+  cursor: pointer;
+}
+
+.counter output {
+  min-width: 3ch;
+  text-align: center;
+  font-size: 2rem;
+  font-variant-numeric: tabular-nums;
+}
+
+button.link {
+  margin-top: 12px;
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--accent);
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+footer {
+  padding-bottom: 48px;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
