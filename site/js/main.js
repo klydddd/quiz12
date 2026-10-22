@@ -1,7 +1,7 @@
 "use strict";
 
 const countEl = document.getElementById("count");
-let count = 0;
+let count = 0
 
 function render() {
   countEl.textContent = String(count);
