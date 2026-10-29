@@ -13,11 +13,14 @@
   </header>
 
   <main>
+    <p id="welcome" class="welcome" aria-live="polite"></p>
+
     <section class="card">
       <h2>Pipeline</h2>
       <ol class="pipeline">
         <li><strong>Push</strong> to <code>main</code></li>
         <li><strong>Lint</strong> JavaScript with ESLint (fails on missing semicolons)</li>
+        <li><strong>Test</strong> the welcome message with Jest</li>
         <li><strong>Package</strong> the <code>site/</code> folder as a Pages artifact</li>
         <li><strong>Deploy</strong> to GitHub Pages</li>
       </ol>
@@ -44,6 +47,7 @@
     <p>SEN10 · Quiz 12</p>
   </footer>
 
+  <script src="js/welcome.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>

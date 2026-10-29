@@ -1,4 +1,4 @@
-name: Lint and Deploy to GitHub Pages
+name: Lint, Test and Deploy to GitHub Pages
 
 on:
   push:
@@ -28,9 +28,23 @@ jobs:
       - name: Run ESLint
         run: npm run lint
 
+  test:
+    name: Test JavaScript
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Run Jest
+        run: npm test
+
   build:
     name: Package site
-    needs: lint
+    needs: [lint, test]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

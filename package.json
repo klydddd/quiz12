@@ -4,11 +4,13 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "lint": "eslint site"
+    "lint": "eslint site tests",
+    "test": "jest"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.5",
     "eslint": "^9.39.5",
-    "globals": "^17.13.0"
+    "globals": "^17.13.0",
+    "jest": "^30.5.2"
   }
 }

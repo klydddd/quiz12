@@ -18,4 +18,21 @@ export default [
       eqeqeq: "error",
     },
   },
+  {
+    files: ["site/js/welcome.js"],
+    languageOptions: {
+      globals: { module: "writable" },
+    },
+  },
+  {
+    files: ["tests/**/*.cjs"],
+    languageOptions: {
+      sourceType: "commonjs",
+      globals: { ...globals.node, ...globals.jest },
+    },
+    rules: {
+      semi: ["error", "always"],
+      quotes: ["error", "double"],
+    },
+  },
 ];
