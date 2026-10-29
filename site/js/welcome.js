@@ -4,7 +4,7 @@ const DAY_MS = 24 * 60 * 60 * 1000;
 
 function getPartOfDay(hour) {
   if (hour < 5) return "night";
-  if (hour < 11) return "morning";
+  if (hour < 12) return "morning";
   if (hour < 18) return "afternoon";
   if (hour < 22) return "evening";
   return "night";
