@@ -26,6 +26,7 @@
 12. [LLM prompts used](#12-llm-prompts-used)
 13. [Issues encountered](#13-issues-encountered)
 14. [Conclusion](#14-conclusion)
+15. [Part 2: Jest test job](#15-part-2-jest-test-job)
 
 ---
 
@@ -71,6 +72,9 @@ This project uses SCM practices in four ways:
 | Test it by breaking a JS rule (omit a semicolon) | ↑ | Commit `7f1dc0c` failed lint and blocked the deploy; commit `c9b6c6c` fixed it ([Section 9](#9-testing-the-quality-gate-breaking-a-js-rule)) |
 | Public GitHub repository link | 5 | https://github.com/klydddd/quiz12 (visibility: **public**) |
 | Share all LLM prompts | ↑ | [Section 12](#12-llm-prompts-used) |
+| **Part 2:** unique JS function that runs on page load | 10 | `getWelcomeMessage()` in `site/js/welcome.js`, run on `DOMContentLoaded` ([Section 15](#15-part-2-jest-test-job)) |
+| Jest test job after lint; deploy only if lint **and** test pass | ↑ | `test` job has `needs: lint`; `build` has `needs: [lint, test]` |
+| Demonstrate a failing and a passing test | 10 | Commit `1f419b7` failed Jest and blocked deploy; `07409b5` fixed it ([Section 15.4](#154-demonstration-failing-then-passing)) |
 
 ---
 
@@ -383,6 +387,9 @@ Newest first:
 
 | Commit | Message | Lint | Package | Deploy | Live site updated? |
 | --- | --- | --- | --- | --- | --- |
+| `07409b5` | Fix: restore morning cutoff to 12 so tests pass | ✅ (test ✅) | ✅ | ✅ | Yes |
+| `1f419b7` | Test: introduce a bug so Jest blocks deployment | ✅ (test ❌) | ⏭️ skipped | ⏭️ skipped | **No (blocked)** |
+| `dd1f31b` | Add page-load welcome message with Jest test job before deploy | ✅ (test ✅) | ✅ | ✅ | Yes |
 | `c9b6c6c` | Fix: restore missing semicolon | ✅ | ✅ | ✅ | Yes |
 | `7f1dc0c` | Test: omit a semicolon to verify lint blocks deployment | ❌ | ⏭️ skipped | ⏭️ skipped | **No (blocked)** |
 | `a3a8400` | Add static site with lint + GitHub Pages deploy workflow | ✅ | ✅ | ✅ | Yes |
@@ -454,6 +461,12 @@ What the LLM did: wrote a first version of this file covering the break-and-fix 
 
 What the LLM did: expanded this file into the full documentation you are reading.
 
+### Prompt 6: Part 2, Jest test job
+
+> add a unique JS function that runs when the page is loaded, then use Jest (JS testing framework) to create a test job after linting so that deployment only happens if both the lint and test jobs pass (10 pts). Demonstrate a failing test and a passing test (10 pts). You may use your preferred LLM to assist you with this task. Submit the link to your GitHub repository (make sure it is set to public) and share all of your LLM prompts here (5 pts).
+
+What the LLM did: wrote `site/js/welcome.js` and `tests/welcome.test.cjs`, installed Jest, added the `test` job to the workflow, and pushed. Then it pushed a commit with a deliberate bug (failing test, deploy skipped) and a fix commit (all green), checked each run, and added [Section 15](#15-part-2-jest-test-job) to this file.
+
 ---
 
 ## 13. Issues encountered
@@ -477,3 +490,75 @@ The project meets all the requirements:
 - **All LLM prompts** are listed in [Section 12](#12-llm-prompts-used).
 
 From an SCM point of view, every change to the code, the quality rules and the delivery pipeline is versioned in Git, checked automatically, and released without manual steps. That combination of version control, CI/CD and DevOps is what this activity set out to practise.
+
+---
+
+## 15. Part 2: Jest test job
+
+### 15.1 The page-load function: `site/js/welcome.js`
+
+When the page loads, a banner at the top shows a greeting based on the time of day and how many days are left in the year, for example:
+
+> Good morning! It's Thursday, and there are 63 days left in 2026.
+
+```js
+function getPartOfDay(hour)      // 0–4 night, 5–11 morning, 12–17 afternoon, 18–21 evening, 22–23 night
+function daysLeftInYear(date)    // 0 on Dec 31, 364 on Jan 1 (365 in a leap year)
+function getWelcomeMessage(date) // builds the sentence; "is 1 day" vs "are N days"
+
+window.addEventListener("DOMContentLoaded", showWelcome);
+```
+
+The logic is in pure functions that take a `Date`, so Jest can test them without a browser. At the bottom of the file, `module.exports` is set only when `module` exists (in Node/Jest). In the browser the file runs as a plain `<script>`.
+
+### 15.2 The tests: `tests/welcome.test.cjs`
+
+16 Jest tests: every part-of-day boundary (4/5, 11/12, 17/18, 21/22), days left on Jan 1 in a common and a leap year, Dec 31, a mid-year date, the full message, and the singular "1 day" case. Run them with `npm test`.
+
+### 15.3 Workflow change
+
+```yaml
+  test:
+    name: Test JavaScript
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Run Jest
+        run: npm test
+
+  build:
+    name: Package site
+    needs: [lint, test]
+```
+
+The pipeline is now **lint → test → package → deploy**. If either lint or test fails, packaging and deployment are skipped. ESLint also checks the test file now (`npm run lint` runs `eslint site tests`).
+
+### 15.4 Demonstration: failing, then passing
+
+**Passing (baseline):** commit `dd1f31b`, [run 40807087240](https://github.com/klydddd/quiz12/actions/runs/40807087240): Lint ✅ · Test ✅ · Package ✅ · Deploy ✅
+
+**Failing:** commit `1f419b7` added a logic bug that lint can't catch, ending "morning" an hour early:
+
+```diff
+-  if (hour < 12) return "morning";
++  if (hour < 11) return "morning";
+```
+
+[Run 40807219348](https://github.com/klydddd/quiz12/actions/runs/40807219348): Lint ✅ · Test ❌ · Package ⏭️ skipped · Deploy ⏭️ skipped
+
+```
+✕ hour 11 is morning
+    Expected: "morning"
+    Received: "afternoon"
+Tests:       1 failed, 15 passed, 16 total
+```
+
+The live site kept the last good version.
+
+**Passing (fixed):** commit `07409b5` restored `hour < 12`. [Run 40807302675](https://github.com/klydddd/quiz12/actions/runs/40807302675): Lint ✅ · Test ✅ · Package ✅ · Deploy ✅. All 16 tests pass and the site redeployed.
