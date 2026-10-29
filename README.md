@@ -1,4 +1,10 @@
-# Quiz 12 — Static site with CI/CD to GitHub Pages
+# Quiz 12 & 13 — Static site with CI/CD to GitHub Pages
+
+- **Quiz 12:** ESLint quality gate before deploy
+- **Quiz 13:** page-load welcome message (`site/js/welcome.js`) + Jest test job before deploy
+
+See [DOCUMENTATION.md](DOCUMENTATION.md) for details.
+
 
 - `site/` — the static site (HTML/CSS/JS)
 - `.github/workflows/deploy.yml` — on every push to `main`:

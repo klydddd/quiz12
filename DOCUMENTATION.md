@@ -1,4 +1,7 @@
-# Quiz 12: Software Configuration Management with CI/CD on GitHub Pages
+# Quiz 12 & Quiz 13: Software Configuration Management with CI/CD on GitHub Pages
+
+- **Quiz 12:** static site, GitHub Pages deploy workflow, ESLint quality gate (Sections 1–14)
+- **Quiz 13:** page-load JS function, Jest test job before deploy, failing/passing test demo ([Section 15](#15-quiz-13-jest-test-job))
 
 | | |
 | --- | --- |
@@ -26,7 +29,7 @@
 12. [LLM prompts used](#12-llm-prompts-used)
 13. [Issues encountered](#13-issues-encountered)
 14. [Conclusion](#14-conclusion)
-15. [Part 2: Jest test job](#15-part-2-jest-test-job)
+15. [Quiz 13: Jest test job](#15-quiz-13-jest-test-job)
 
 ---
 
@@ -72,7 +75,7 @@ This project uses SCM practices in four ways:
 | Test it by breaking a JS rule (omit a semicolon) | ↑ | Commit `7f1dc0c` failed lint and blocked the deploy; commit `c9b6c6c` fixed it ([Section 9](#9-testing-the-quality-gate-breaking-a-js-rule)) |
 | Public GitHub repository link | 5 | https://github.com/klydddd/quiz12 (visibility: **public**) |
 | Share all LLM prompts | ↑ | [Section 12](#12-llm-prompts-used) |
-| **Part 2:** unique JS function that runs on page load | 10 | `getWelcomeMessage()` in `site/js/welcome.js`, run on `DOMContentLoaded` ([Section 15](#15-part-2-jest-test-job)) |
+| **Quiz 13:** unique JS function that runs on page load | 10 | `getWelcomeMessage()` in `site/js/welcome.js`, run on `DOMContentLoaded` ([Section 15](#15-quiz-13-jest-test-job)) |
 | Jest test job after lint; deploy only if lint **and** test pass | ↑ | `test` job has `needs: lint`; `build` has `needs: [lint, test]` |
 | Demonstrate a failing and a passing test | 10 | Commit `1f419b7` failed Jest and blocked deploy; `07409b5` fixed it ([Section 15.4](#154-demonstration-failing-then-passing)) |
 
@@ -429,7 +432,7 @@ Push any commit to `main` and open the **Actions** tab. A push with a lint error
 
 ## 12. LLM prompts used
 
-**LLM:** Claude (Claude Code CLI, model Claude Opus 5.5). These are all the prompts I gave, in order:
+**LLM:** Claude (Claude Code CLI, model Claude Opus 5.5). These are all the prompts I gave, in order. Prompts 1–5 are for Quiz 12; Prompt 6 is for Quiz 13:
 
 ### Prompt 1: build the site, workflow and lint test (via `/goal`)
 
@@ -461,11 +464,11 @@ What the LLM did: wrote a first version of this file covering the break-and-fix 
 
 What the LLM did: expanded this file into the full documentation you are reading.
 
-### Prompt 6: Part 2, Jest test job
+### Prompt 6: Quiz 13, Jest test job
 
 > add a unique JS function that runs when the page is loaded, then use Jest (JS testing framework) to create a test job after linting so that deployment only happens if both the lint and test jobs pass (10 pts). Demonstrate a failing test and a passing test (10 pts). You may use your preferred LLM to assist you with this task. Submit the link to your GitHub repository (make sure it is set to public) and share all of your LLM prompts here (5 pts).
 
-What the LLM did: wrote `site/js/welcome.js` and `tests/welcome.test.cjs`, installed Jest, added the `test` job to the workflow, and pushed. Then it pushed a commit with a deliberate bug (failing test, deploy skipped) and a fix commit (all green), checked each run, and added [Section 15](#15-part-2-jest-test-job) to this file.
+What the LLM did: wrote `site/js/welcome.js` and `tests/welcome.test.cjs`, installed Jest, added the `test` job to the workflow, and pushed. Then it pushed a commit with a deliberate bug (failing test, deploy skipped) and a fix commit (all green), checked each run, and added [Section 15](#15-quiz-13-jest-test-job) to this file.
 
 ---
 
@@ -493,7 +496,7 @@ From an SCM point of view, every change to the code, the quality rules and the d
 
 ---
 
-## 15. Part 2: Jest test job
+## 15. Quiz 13: Jest test job
 
 ### 15.1 The page-load function: `site/js/welcome.js`
 
